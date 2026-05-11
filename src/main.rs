@@ -130,12 +130,17 @@ fn main() {
 
             println!("{}", short_id);
 
-            let url_data = short_to_long.get(short_id);
+            let url_data = short_to_long.get_mut(short_id);
 
             match url_data {
-                Some(data) => println!("Original url {}",data.original_url),
+                Some(data) => {
+                    println!("Original url {}",data.original_url);
+                    data.visits = data.visits+1;
+                },
                 None => println!("Not a valid url")
             }
+
+            save_url_data(short_to_long);
         }
     }
 }
