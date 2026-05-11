@@ -81,17 +81,18 @@ fn get_all_long_to_short_urls() -> HashMap<String, String> {
 }
 
 fn generate_random_id() -> String {
-    let chars = String::from("abcdefghijklmnopqrstuvwxyz012223456789_");
+    let chars = b"abcdefghijklmnopqrstuvwxyz012223456789_";
 
     let mut short_id = String::from("");
 
     for _ in 0..6 {
         let j = fastrand::usize(..chars.len());
-        let ch = chars.chars().nth(j).unwrap();
-        short_id.push(ch);
+       short_id.push(chars[j] as char);
+
+
     } 
 
-    return short_id
+    return short_id;
 }
 fn main() {
     let cli = UrlShortner::parse();
@@ -106,7 +107,12 @@ fn main() {
             let mut new_url = String::from("https://urlshortnercli/");
 
             if !contains_key {
-                let short_id = generate_random_id();
+                let mut short_id = generate_random_id();
+
+                while short_to_long.contains_key(&short_id) {
+                    short_id = generate_random_id();
+                }
+                
                 let url_data = UrlData {
                     original_url: url.to_string(),
                     visits: 0,
